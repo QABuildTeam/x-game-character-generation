@@ -28,12 +28,28 @@ public class CylinderMeshGenerator : MonoBehaviour
         GenerateMesh();
     }
 
+    void DisplayNormals()
+    {
+        if (mesh != null)
+        {
+            Vector3[] normals = mesh.normals;
+            Vector3[] vertices = mesh.vertices;
+            int[] triangles = mesh.triangles;
+            //Debug.Log("Number of normals: " + normals.Length.ToString());
+            for(int i = 0; i < normals.Length; i++)
+            {
+                Debug.DrawRay(vertices[i], normals[i], Color.yellow);
+            }
+        }
+    }
+
     // Update is called once per frame
     [SerializeField]
     protected float deltaAngle = 15f;
     void Update()
     {
-        transform.Rotate(Vector3.back + Vector3.left, Mathf.Deg2Rad * deltaAngle, Space.Self);
+        //transform.Rotate(Vector3.back + Vector3.left, Mathf.Deg2Rad * deltaAngle, Space.Self);
+        DisplayNormals();
     }
 
     void GenerateMesh()
@@ -181,6 +197,7 @@ public class CylinderMeshGenerator : MonoBehaviour
                 mesh.RecalculateNormals();
                 meshFilter.mesh = mesh;
                 meshRenderer.material = material;
+                DisplayNormals();
             }
         }
     }
