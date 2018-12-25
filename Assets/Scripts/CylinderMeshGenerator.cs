@@ -35,10 +35,23 @@ public class CylinderMeshGenerator : MonoBehaviour
             Vector3[] normals = mesh.normals;
             Vector3[] vertices = mesh.vertices;
             int[] triangles = mesh.triangles;
-            //Debug.Log("Number of normals: " + normals.Length.ToString());
-            for(int i = 0; i < normals.Length; i++)
+            // face normals
+            for (int i = 0; i < triangles.Length; i += 3)
             {
-                Debug.DrawRay(vertices[i], normals[i], Color.yellow);
+                Vector3 v0 = transform.TransformPoint(vertices[triangles[i]]);
+                Vector3 v1 = transform.TransformPoint(vertices[triangles[i + 1]]);
+                Vector3 v2 = transform.TransformPoint(vertices[triangles[i + 2]]);
+                Vector3 center = (v0 + v1 + v2) / 3;
+
+                Vector3 dir = Vector3.Cross(v1 - v0, v2 - v0);
+                dir /= dir.magnitude;
+
+                Debug.DrawRay(center, dir, Color.yellow);
+            }
+            // vertex normals
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                Debug.DrawRay(transform.TransformPoint(vertices[i]), transform.TransformVector(normals[i]), Color.red);
             }
         }
     }
@@ -48,7 +61,7 @@ public class CylinderMeshGenerator : MonoBehaviour
     protected float deltaAngle = 15f;
     void Update()
     {
-        //transform.Rotate(Vector3.back + Vector3.left, Mathf.Deg2Rad * deltaAngle, Space.Self);
+        transform.Rotate(Vector3.back + Vector3.left, Mathf.Deg2Rad * deltaAngle, Space.Self);
         DisplayNormals();
     }
 
